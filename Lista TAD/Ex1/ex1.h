@@ -1,6 +1,6 @@
 //typedef int bool;
-#define FALSO 1
-#define VERDADEIRO 0
+#define FALSO 0
+#define VERDADEIRO 1
 
 typedef struct conjunto Conj;
 
