@@ -1,6 +1,7 @@
 //typedef int bool;
 #define FALSO 0
 #define VERDADEIRO 1
+#define MAX 20
 
 typedef struct conjunto Conj;
 
@@ -24,15 +25,15 @@ int conjuntosIdenticos(Conj* C1, Conj* C2); //verifica se dois conjuntos são ig
 
 int subconjunto(Conj* C1, Conj* C2); //verifica se o conjunto C1 é subconjunto de C2
 
-Conj complemento(Conj* C1, Conj* C2); //retorna um conjunto com os números que estão em C2 e não estão em C1
+Conj* complemento(Conj* C1, Conj* C2); //retorna um conjunto com os números que estão em C2 e não estão em C1
 
-Conj uniao(Conj* C1, Conj* C2); //retorna um conjunto com os elementos de C1 e C2 juntos sem se repetirem
+Conj* uniao(Conj* C1, Conj* C2); //retorna um conjunto com os elementos de C1 e C2 juntos sem se repetirem
 
-Conj interseccao(Conj* C1, Conj* C2); //retorna um conjunto com os elementos que estão simultaneamente em ambos conjuntos
+Conj* interseccao(Conj* C1, Conj* C2); //retorna um conjunto com os elementos que estão simultaneamente em ambos conjuntos
 
-Conj diferenca(Conj* C1, Conj C2); //retorna os elementos que estão em C1 mas que não estão em C2
+Conj* diferenca(Conj* C1, Conj* C2); //retorna os elementos que estão em C1 mas que não estão em C2
 
-Conj conjuntoPartes(Conj* C); //(?????) gera o conjunto das partes de C
+Conj* conjuntoPartes(Conj* C); //(?????) gera o conjunto das partes de C
 
 void mostraConjunto(Conj* C, char* ordem); //Exibe os elementos em ordem crescente ou decrescente de acordo com o informado
 
