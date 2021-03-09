@@ -1,7 +1,8 @@
 
-# Serão ignorados os arquivos relativos e/ou feitos durante as aulas práticas
-# Os arquivos compilados em .exe também serão ignorados
+# Será ignorada a pasta com arquivos feitos durante as aulas práticas
+# Também serão ignorados os pdfs e arquivos compilados
 
-.exe
-.so
+*.exe
+*.pdf
+
 LAB ED1/
