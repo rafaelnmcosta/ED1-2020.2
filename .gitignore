@@ -1,0 +1,7 @@
+# Serão ignorados os arquivos relativos e/ou feitos durante as aulas práticas
+# Os arquivos compilados em .exe também serão ignorados
+
+LAB ED1/
+.so
+.exe
+
