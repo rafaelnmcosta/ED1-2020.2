@@ -20,8 +20,7 @@ int main(){
 
 int eleva(int k, int n){
 
-    if(n==1){
-        return k;
-    }
+    if(n==1) return k;
+    
     else return k * eleva(k, n-1);
 }

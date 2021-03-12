@@ -20,8 +20,7 @@ int somaCubos(int n){
 
     int cubo = n*n*n;
 
-    if(n == 1){
-        return 1;
-    }
+    if(n == 1) return 1;
+    
     else return cubo + somaCubos(n-1);
 }

@@ -18,8 +18,7 @@ int main(){
 
 int somatorio(int N){
 
-    if(N==1){
-        return N;
-    }
+    if(N==1) return N;
+    
     else return N + somatorio(N-1);
 }
