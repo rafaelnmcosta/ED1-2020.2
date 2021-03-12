@@ -1,8 +1,10 @@
 
 # Será ignorada a pasta com arquivos feitos durante as aulas práticas
-# Também serão ignorados os pdfs e arquivos compilados
+# Também serão ignorados os pdfs, arquivos compilados e arquivos compactados
 
 *.exe
 *.pdf
+*.rar
+*.zip
 
 LAB ED1/
