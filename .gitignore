@@ -7,5 +7,7 @@
 *.rar
 *.zip
 *.out
+teste.c
 
+.vscode/
 LAB ED1/
