@@ -100,7 +100,7 @@ int tamanho(TipoLista* lista){
 }
 
 void imprimeLista(TipoLista lista){
-    printf("\n");
+    printf("Lista: ");
     for(int i = 0; i < lista.nroItens; i++){
         printf("%d ", lista.v[i].valor);
     }
@@ -185,25 +185,30 @@ int main(){
     imprimeLista(lista2);
 
     /* Questao 1 */
+    printf("\n--- Questao 1: concatenar listas: ---\n");
     lista3 = concatena(&lista1, &lista2);
     imprimeLista(lista3);
 
     /* Questao 3 */
+    printf("\n--- Questao 3: buscar posicao de item: ---\n");
     int valor, posicao;
     buscaMaior(&lista3, &valor, &posicao);
-    printf("%d %d\n", valor, posicao);
+    printf("Valor buscado: %d\nPosicao: %d\n", valor, posicao);
 
     /* Questao 4 */
+    printf("\n--- Questao 4: contar numeros pares: ---\n");
     int pares;
     pares = contaPares(&lista3);
-    printf("%d\n", pares);
+    printf("Existem %d pares na lista\n", pares);
 
     /* Questao 5 */
+    printf("\n--- Questao 5: calcular media da lista: ---\n");
     float media;
     media = calculaMedia(&lista3);
-    printf("%f\n", media);
+    printf("A media eh %f\n", media);
     
     /* Questao 2 */
+    printf("\n--- Questao 2: remover os N primeiros itens: (para n=2)---\n");
     removeItens(&lista3, 2);
     imprimeLista(lista3);
 

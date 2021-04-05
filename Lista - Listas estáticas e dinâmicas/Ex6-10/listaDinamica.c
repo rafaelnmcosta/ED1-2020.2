@@ -6,10 +6,8 @@
 /* Funcoes pedidas nos exercicios de 6 a 10 */
 /*------------------------------------------*/
 
-tipoLista geraListaPorVetor(int total, int* vet){
+tipoLista geraListaPorVetor(int tam, int* vet){
 
-    /* Descobre o tamanho do vetor para o laço for */
-    int tam = sizeof(vet)/sizeof(vet[0]);
     int i;
 
     tipoLista lista;
@@ -51,9 +49,10 @@ tipoLista concatenaListas(tipoLista lista1, tipoLista lista2){
 bool removeRepetidos(tipoLista* lista){
     tipoLista verificadora;
     tipoCelula* atual;
-    tipoCelula* repetido;
+    tipoCelula* jaExiste;
 
-    repetido = atual = lista->inicio;
+    atual = lista->inicio;
+    jaExiste = lista->inicio;
     
 
     /* Cria uma lista para guardar os itens e comparar quais foram repetidos */
@@ -70,15 +69,15 @@ bool removeRepetidos(tipoLista* lista){
             atual = atual->prox;
         }
         else{
-            printf("Item repetido encontrado: %d", atual->item);
-            repetido = atual;
+            printf("Item repetido encontrado: %d\n", atual->item);
+            jaExiste = atual;
             atual = atual->prox;
-            removeItemPorPosicao(lista, repetido);
+            removeItemPorPosicao(lista, jaExiste);
         }
     }while(atual->prox != NULL);
 
     /* Retorna false se nenhum numero foi excluido */
-    if(repetido == lista->inicio) return false;
+    if(jaExiste == lista->inicio) return false;
 
     else return true;
 }
@@ -90,8 +89,8 @@ tipoLista intercalaListas(tipoLista lista1, tipoLista lista2){
 
     iniciaLista(&listaFinal);
 
-    atual1 = &lista1;
-    atual2 = &lista2;
+    atual1 = lista1.inicio;
+    atual2 = lista2.inicio;
     
     /* Insere os itens intercalados até que uma das duas listas acabe */
     do{
@@ -103,13 +102,13 @@ tipoLista intercalaListas(tipoLista lista1, tipoLista lista2){
     }while(atual1->prox != NULL && atual2->prox != NULL);
     
     /* Verifica qual lista acabou e insere o restante dos itens da lista que sobrou */
-    if(atual1->prox == NULL){
+    if(atual2->prox != NULL){
         do{
             insereItem(&listaFinal, atual2->item);
             atual2 = atual2->prox;
         }while(atual2->prox != NULL);
     }
-    else{
+    else if(atual1->prox != NULL){
         do{
             insereItem(&listaFinal, atual1->item);
             atual1 = atual1->prox;
@@ -123,11 +122,12 @@ int somaValoresLista(tipoLista lista){
     tipoCelula* atual;
     int soma;
 
-    atual = &lista.inicio;
+    atual = lista.inicio;
+    soma = atual->item;
 
     do{
-        soma += atual->item;
         atual = atual->prox;
+        soma += atual->item;
     }while(atual->prox != NULL);
 
     return soma;
@@ -149,14 +149,21 @@ bool iniciaLista(tipoLista* lista){
 }
 
 bool insereItem(tipoLista* lista, int n){
+
     tipoCelula* novaCelula;
+    tipoCelula* ultima;
+
+    ultima = lista->fim;
     novaCelula = (tipoCelula*) malloc(sizeof(tipoCelula));
+
+    ultima->prox = novaCelula;
+
+    ultima->item = n;
+    novaCelula->prox = NULL;
+    
     lista->fim = novaCelula;
 
-    novaCelula->item = n;
-    novaCelula->prox = NULL;
-
-    return true;    
+    return true;  
 }
 
 bool existeItem(tipoLista lista, int alvo){
@@ -164,12 +171,23 @@ bool existeItem(tipoLista lista, int alvo){
 
     atual = lista.inicio;
 
-    while(atual->item != alvo || atual->prox != NULL){
+    while(atual->item != alvo && atual->prox != NULL){
         atual = atual->prox;
     }
     if(atual->item == alvo) return true;
 
     else return false;
+}
+
+tipoCelula* buscaItem(tipoLista* lista, int alvo){
+    tipoCelula* atual;
+
+    atual = lista->inicio;
+
+    while(atual->item != alvo && atual->prox != NULL){
+        atual = atual->prox;
+    }
+    if(atual->item == alvo) return atual;
 }
 
 bool removeItemPorValor(tipoLista* lista, int n){
@@ -191,17 +209,16 @@ bool removeItemPorValor(tipoLista* lista, int n){
     atual = anterior->prox;
     seguinte = atual->prox;
 
-    while(atual->prox != NULL){
+    while(seguinte != NULL){
         if(atual->item == n){
-            
-            /* Vê se eh o ultimo item pra adaptar o ptr de fim da lista */
-            if(atual->prox == NULL){
-                lista->fim = anterior;
-            }
-            
             anterior->prox = seguinte;
             free(atual);
             return true;
+        }
+        else{
+            anterior = atual;
+            atual = atual->prox;
+            seguinte = atual->prox;
         }
     }
     /* Retorna falso caso nao exista o item buscado */
@@ -213,14 +230,16 @@ bool removeItemPorPosicao(tipoLista* lista, tipoCelula* alvo){
 
     atual = lista->inicio;
 
+    /* Verifica se eh o primeiro da lista */
     if(atual == alvo){
-        lista->inicio = alvo->prox;
+        lista->inicio = atual->prox;
+        free(alvo);
         return true;
     }
-
+    
     do{
         atual = atual->prox;
-    }while(atual->prox != alvo || atual->prox != NULL);
+    }while(atual->prox != alvo && atual->prox != NULL);
 
     if(atual->prox == alvo){
         atual->prox = alvo->prox;
@@ -234,9 +253,63 @@ void imprimeLista(tipoLista lista){
     tipoCelula* atual;
     printf(" Lista: ");
 
+    atual = lista.inicio;
+
     do{
         printf("%d ", atual->item);
         atual = atual->prox;
     }
-    while(atual != NULL);
+    while(atual->prox != NULL);
+    printf("\n");
+}
+
+int main(){
+
+    tipoLista listaVetor1, listaVetor2, listaConcatenada, listaIntercalada;
+
+    int vet1[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int vet2[] = {8, 9, 10, 11, 12, 13, 14};
+    int tamVet1, tamVet2, soma;
+
+    /* (Eh necessario saber o tamanho dos vetores para passar como parametro da funcao) */
+    tamVet1 = sizeof vet1 / sizeof vet1[0];
+    tamVet2 = sizeof vet2 / sizeof vet2[0];
+
+    iniciaLista(&listaVetor1);
+    iniciaLista(&listaVetor2);
+    iniciaLista(&listaConcatenada);
+    iniciaLista(&listaIntercalada);
+
+    /* Questao 6 */
+    printf("\n--- Questao 6: gerar listas por vetores: ---\n");
+    listaVetor1 = geraListaPorVetor(tamVet1, vet1);
+    listaVetor2 = geraListaPorVetor(tamVet2, vet2);
+
+    imprimeLista(listaVetor1);
+    imprimeLista(listaVetor2);
+
+    /* Questao 7 */
+    printf("\n--- Questao 7: concatenar listas: ---\n");
+    listaConcatenada = concatenaListas(listaVetor1, listaVetor2);
+
+    /* Questao 8 */
+    printf("\n--- Questao 8: remover itens repetidos: ---\n");
+    if(removeRepetidos(&listaConcatenada) == false){
+        printf("Erro ao remover repetidos");
+    }
+    else imprimeLista(listaConcatenada);
+
+    /* Questao 9 */
+    printf("\n--- Questao 9: intercalar listas: ---\n");
+    listaIntercalada = intercalaListas(listaVetor1, listaVetor2);
+
+    imprimeLista(listaIntercalada);
+
+    /* Questao 10 */    
+    printf("\n--- Questao 10: somar os valores das listas: ---\n");
+    soma = somaValoresLista(listaIntercalada);
+
+    printf("O valor da soma eh %d\n\n", soma);
+
+    return 0;
 }

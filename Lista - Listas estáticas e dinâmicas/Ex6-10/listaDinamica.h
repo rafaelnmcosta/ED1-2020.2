@@ -1,4 +1,3 @@
-#define MAX 10
 #define false 0
 #define true 1
 
@@ -32,6 +31,7 @@ int somaValoresLista(tipoLista);
 bool iniciaLista(tipoLista*);
 bool insereItem(tipoLista*, int);
 bool existeItem(tipoLista, int);
+tipoCelula* buscaItem(tipoLista*, int);
 bool removeItemPorValor(tipoLista*, int);
 bool removeItemPorPosicao(tipoLista*, tipoCelula*);
 void imprimeLista(tipoLista);
