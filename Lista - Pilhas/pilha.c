@@ -8,18 +8,24 @@
 
 /* Questao 1 */
 int retornaTopo(tipoPilha* pilha){
+
+    /* Tem o funcionamento igual ao "pop", mas foi repetida por praticidade */
+
     tipoCelula* topo = pilha->topo;
-    int retorno = topo->valor;
+    int valorTopo = topo->valor;
 
     tipoCelula* aux = topo;
     topo = topo->prox;
 
     free(aux);
-    return retorno;
+    return valorTopo;
 }
 
 /* Questao 2 */
 bool maiorMenorMedia(tipoPilha pilha, int* maior, int* menor, int* media){
+
+    /* Como deveria retornar muitos valores, faz isso atraves de referencia */
+
     tipoCelula* atual = pilha.topo;
     int soma;
 
@@ -27,7 +33,7 @@ bool maiorMenorMedia(tipoPilha pilha, int* maior, int* menor, int* media){
     menor = atual->valor;
     soma = 0;
 
-
+    /* Percorre a pilha ate o final ajustando os valores maior e menor, e aumentando a soma */
     do{
         if(atual->valor > maior){
             maior = atual->valor;
@@ -42,6 +48,7 @@ bool maiorMenorMedia(tipoPilha pilha, int* maior, int* menor, int* media){
 
     } while(atual->prox != NULL);
 
+    /* Calcula a media e define o ultimo valor "retornado" */
     int nroElem = contaElementos(pilha);
     media = soma / nroElem;
 
@@ -50,12 +57,20 @@ bool maiorMenorMedia(tipoPilha pilha, int* maior, int* menor, int* media){
 
 /* Questao 3 */
 bool invertePilha(tipoPilha* pilha){
+
+    /*
+    A logica consiste em passar os itens da pilha para uma fila, depois
+    desenfileirar os itens novamente para a pilha, fazendo com que sejam 
+    inseridos na ordem reversa da que foram retirados
+    */
+
     tipoFila filaAux;
 
     iniciaFila(&filaAux);
 
     int valor;
 
+    /* passa os itens para a fila */
     while(vaziaPilha(*pilha) == false){
         valor = pop(pilha);
         insereFila(&filaAux, valor);
@@ -63,6 +78,7 @@ bool invertePilha(tipoPilha* pilha){
 
     int auxInsercao;
 
+    /* volta os itens para a pilha */
     while(vaziaFila(filaAux) == false){
         auxInsercao = removeFila(&filaAux);
         push(pilha, auxInsercao);
@@ -73,18 +89,22 @@ bool invertePilha(tipoPilha* pilha){
 
 /* Questao 4 */
 bool palindromo(tipoPilha pilha){
+
+    /* cria uma copia da pilha e a inverte para a comparacao */
     tipoPilha* pilhaAux = copiaPilha(pilha);
     invertePilha(pilhaAux);
 
     tipoCelula* atual = pilha.topo;
     tipoCelula* atualAux = pilhaAux->topo;
 
+    /* percorre as duas pilhas comparando as letras */
     do{
         if(atual->letra != atualAux->letra) return false;
         atual = atual->prox;
         atualAux = atualAux->prox;
     } while (atual->prox != NULL);
 
+    /* caso nao tenha encontrado nenhuma diferenca, sao palindromas */
     return true;
 }
 
@@ -102,6 +122,7 @@ void criaPilhaPorFilas(){
     int valor;
     tipoCelula aux;
 
+    /* roda o menu enquanto o usuario fornece os valores */
     while(verificador == true){
         
         printf("Informe um numero: ");
@@ -118,6 +139,7 @@ void criaPilhaPorFilas(){
         scanf("%d", verificador);
     }
 
+    /* insere alternadamente os valores pares e impares ate as duas filas estarem vazias */
     do{
         if(vaziaFila(filaImpar) == false){
             valor = removeFila(&filaImpar);
@@ -148,7 +170,161 @@ void criaPilhaPorFilas(){
 /* Funcoes de controle das pilhas */
 /*--------------------------------*/
 
+bool iniciaPilha(tipoPilha* pilha){
+    pilha->topo = NULL;
+
+    if(pilha->topo == NULL) return true;
+    else return false;
+}
+
+
+int contaElementos(tipoPilha pilha){
+    tipoCelula* atual;
+    int contador = 0;
+
+    atual = pilha.topo;
+
+    do{
+        contador++;
+        atual = atual->prox;
+    } while(atual->prox != NULL);
+
+    return contador;
+}
+
+void imprimePilha(tipoPilha pilha){
+    tipoCelula* atual;
+
+    do{
+        printf("Pilha: ");
+        printf("%d ", atual->valor);
+        atual = atual->prox;
+    } while(atual->prox != NULL);
+}
+
+
+bool vaziaPilha(tipoPilha pilha){
+    if(pilha.topo == NULL) return true;
+    else return false;
+}
+
+
+bool push(tipoPilha* pilha, int n){
+    tipoCelula* novaCelula;
+    tipoCelula* topoAntigo;
+
+    novaCelula = (tipoCelula*) malloc(sizeof(tipoCelula));
+
+    topoAntigo = pilha->topo;
+
+    pilha->topo = novaCelula;
+    novaCelula->prox = topoAntigo;
+    novaCelula->valor = n;
+
+    return true;
+}
+
+
+int pop(tipoPilha* pilha){
+
+    if(vaziaPilha(*pilha)){
+        printf("A pilha esta vazia!\n");
+        return false;
+    }
+    tipoCelula* aux;
+    aux = pilha->topo;
+
+    int valorTopo = aux->valor;
+    pilha->topo = aux->prox;
+
+    free(aux);
+    return valorTopo;
+}
+
+
+tipoPilha* copiaPilha(tipoPilha pilha){
+
+    if(vaziaPilha(pilha)){
+        printf("A pilha esta vazia!\n");
+    }
+
+    /*
+    Cria uma pilha auxiliar pois ao remover os itens da pilha pela primeira vez, eles ficarao
+    em ordem oposta a original, portanto precisa ser realocada novamente para que a ordem inicial
+    seja preservada na pilha final
+    */
+    tipoPilha novaPilha;
+    tipoPilha pilhaAux;
+    iniciaPilha(&novaPilha);
+    iniciaPilha(&pilhaAux);
+
+    tipoCelula* aux;
+    int v;
+
+    aux = pilha.topo;
+
+    /* copia os valores para uma pilha auxiliar inversa */
+    do{
+        v = aux->valor;
+        push(&pilhaAux, v);
+    } while(aux->prox != NULL);
+
+    aux = pilhaAux.topo;
+
+    /* copia a pilha inversa novamente, agora deixando a pilha final correta */
+    do{
+        v = aux->valor;
+        push(&novaPilha, v);
+    } while(aux->prox != NULL);
+
+    return &novaPilha;
+}
 
 /*-------------------------------*/
 /* Funcoes de controle das filas */
 /*-------------------------------*/
+
+bool iniciaFila(tipoFila* fila){
+    fila->inicio = NULL;
+    fila->fim = NULL;
+
+    if(fila->inicio == fila->fim == NULL) return true;
+    else return false;
+}
+
+bool vaziaFila(tipoFila fila){
+    if(fila.inicio == fila.fim) return true;
+    else return false;
+}
+
+bool insereFila(tipoFila* fila, int n){
+    tipoCelula *novaCelula;
+    tipoCelula *aux;
+
+    novaCelula = (tipoCelula*) malloc(sizeof(tipoCelula));
+
+    aux = fila->fim;
+    aux->prox = novaCelula;
+
+    novaCelula->valor = n;
+    novaCelula->prox = NULL;
+
+    fila->fim = novaCelula;
+
+    return true;
+}
+
+int removeFila(tipoFila* fila){
+
+    if(vaziaFila(*fila) == true) return false;
+
+    tipoCelula* aux;
+    int valor;
+
+    aux = fila->inicio;
+    valor = aux->valor;
+    fila->inicio = aux->prox;
+
+    free(aux);
+    return valor;
+}
