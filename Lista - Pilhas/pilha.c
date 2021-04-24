@@ -15,42 +15,49 @@ int retornaTopo(tipoPilha* pilha){
     int valorTopo = topo->valor;
 
     tipoCelula* aux = topo;
-    topo = topo->prox;
+    pilha->topo = topo->prox;
 
     free(aux);
     return valorTopo;
 }
 
 /* Questao 2 */
-bool maiorMenorMedia(tipoPilha pilha, int* maior, int* menor, int* media){
+bool maiorMenorMedia(tipoPilha pilha, int* maior, int* menor, float* media){
 
     /* Como deveria retornar muitos valores, faz isso atraves de referencia */
 
-    tipoCelula* atual = pilha.topo;
-    int soma;
+    tipoCelula* atual;
+    float soma;
+    float auxMedia;
+    int auxMaior;
+    int auxMenor;
 
-    maior = atual->valor;
-    menor = atual->valor;
-    soma = 0;
+    atual = pilha.topo;
+    auxMaior = atual->valor;
+    auxMenor = atual->valor;
+    soma = atual->valor;
 
     /* Percorre a pilha ate o final ajustando os valores maior e menor, e aumentando a soma */
     do{
-        if(atual->valor > maior){
-            maior = atual->valor;
+        atual = atual->prox;
+
+        if(atual->valor > auxMaior){
+            auxMaior = atual->valor;
         }
-        if(atual->valor < menor){
-            menor = atual->valor;
+        if(atual->valor < auxMenor){
+            auxMenor = atual->valor;
         }
 
         soma = soma + atual->valor;
-
-        atual = atual->prox;
-
     } while(atual->prox != NULL);
 
     /* Calcula a media e define o ultimo valor "retornado" */
     int nroElem = contaElementos(pilha);
-    media = soma / nroElem;
+    auxMedia = soma / ((float)nroElem);
+
+    *maior = auxMaior;
+    *menor = auxMenor;
+    *media = auxMedia;
 
     return true;
 }
@@ -65,6 +72,7 @@ bool invertePilha(tipoPilha* pilha){
     */
 
     tipoFila filaAux;
+    tipoCelula* aux;
 
     iniciaFila(&filaAux);
 
@@ -180,7 +188,7 @@ bool iniciaPilha(tipoPilha* pilha){
 
 int contaElementos(tipoPilha pilha){
     tipoCelula* atual;
-    int contador = 0;
+    int contador = 1;
 
     atual = pilha.topo;
 
@@ -195,11 +203,16 @@ int contaElementos(tipoPilha pilha){
 void imprimePilha(tipoPilha pilha){
     tipoCelula* atual;
 
-    do{
-        printf("Pilha: ");
-        printf("%d ", atual->valor);
-        atual = atual->prox;
-    } while(atual->prox != NULL);
+    atual = pilha.topo;
+    printf("\nPilha: %d ", atual->valor);
+
+    if(atual->prox != NULL){
+        do{
+            atual = atual->prox;
+            printf("%d ", atual->valor);
+        } while(atual->prox != NULL);
+    }
+    printf("\n");
 }
 
 
@@ -211,15 +224,12 @@ bool vaziaPilha(tipoPilha pilha){
 
 bool push(tipoPilha* pilha, int n){
     tipoCelula* novaCelula;
-    tipoCelula* topoAntigo;
 
     novaCelula = (tipoCelula*) malloc(sizeof(tipoCelula));
 
-    topoAntigo = pilha->topo;
-
-    pilha->topo = novaCelula;
-    novaCelula->prox = topoAntigo;
     novaCelula->valor = n;
+    novaCelula->prox = pilha->topo;
+    pilha->topo = novaCelula;
 
     return true;
 }
@@ -231,6 +241,7 @@ int pop(tipoPilha* pilha){
         printf("A pilha esta vazia!\n");
         return false;
     }
+    
     tipoCelula* aux;
     aux = pilha->topo;
 

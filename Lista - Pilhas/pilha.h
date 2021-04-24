@@ -26,7 +26,7 @@ typedef struct fila{
 /* Funcoes pedidas nos exercicios */
 /*--------------------------------*/
 int retornaTopo(tipoPilha*);
-bool maiorMenorMedia(tipoPilha, int*, int*, int*);
+bool maiorMenorMedia(tipoPilha, int*, int*, float*);
 bool invertePilha(tipoPilha*);
 bool palindromo(tipoPilha);
 void criaPilhaPorFilas();
