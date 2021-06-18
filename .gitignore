@@ -3,7 +3,6 @@
 # Também serão ignorados os pdfs, arquivos compilados e arquivos compactados
 
 *.exe
-*.pdf
 *.rar
 *.zip
 *.out
